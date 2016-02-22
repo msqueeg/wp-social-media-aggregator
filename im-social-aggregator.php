@@ -399,12 +399,36 @@ class IM_Aggregator {
 		);
 
 		$fields[] = array(
-			'id' => $this->prefix . 'yt_username',
-			'title' => 'User Name',
+			'id' => $this->prefix . 'yt_maxResults',
+			'title' => 'Max Results',
 			'callback' => array($this, 'render_field'),
 			'page' => 'youtube_page',
 			'section' => $this->prefix . 'youtube',
-			'desc' => 'Provide a user name',
+			'desc' => 'Provide the max number of results',
+			'type' => 'text',
+			'default_value' => '3',
+			'class' => ''
+		);
+
+		$fields[] = array(
+			'id' => $this->prefix . 'yt_APIKey',
+			'title' => 'Browser API Key',
+			'callback' => array($this, 'render_field'),
+			'page' => 'youtube_page',
+			'section' => $this->prefix . 'youtube',
+			'desc' => 'Provide an YouTube API v3 Browser Key',
+			'type' => 'text',
+			'default_value' => '',
+			'class' => ''
+		);
+
+		$fields[] = array(
+			'id' => $this->prefix . 'yt_playlist',
+			'title' => 'Play List ID',
+			'callback' => array($this, 'render_field'),
+			'page' => 'youtube_page',
+			'section' => $this->prefix . 'youtube',
+			'desc' => 'Provide a Play List ID',
 			'type' => 'text',
 			'default_value' => '',
 			'class' => ''
