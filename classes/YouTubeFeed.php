@@ -56,7 +56,7 @@ class YouTubeFeed extends Base implements iSocialFeed {
 				$p['date_added'] = $date_added;
 				$p['date_created'] = strtotime((string)$item->snippet->publishedAt);
 
-				$p['picture'] = $item->snippet->default->url;
+				$p['picture'] = $item->snippet->thumbnails->high->url;
 
 				$item_timestamps[] = $item_timestamp;
 				array_push($data, $p);

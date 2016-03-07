@@ -17,6 +17,14 @@ class TwitterFeed extends Base implements iSocialFeed {
 
 	}
 
+	public function filterContent( $text ) {
+		$text = strip_tags( $text );
+		$text = preg_replace( '/(https?:\/\/[^\s\)]+)/', '<a href="\\1">\\1</a>', $text );
+		$text = preg_replace( '/(^|\s)\#([^\s\ \:\.\;\-\,\!\)\(\"]+)/', '\\1<a href="https://twitter.com/hashtag/\\2">#\\2</a>', $text );
+		$text = preg_replace( '/(^|\s)\@([^\s\ \:\.\;\-\,\!\)\(\"]+)/', '\\1<a href="https://twitter.com/\\2">@\\2</a>', $text );
+		return $text;
+	}
+
 	public function getFeed ($options) {
 
 		$since_time = empty($options['sa_since_time']) ? 1 : $options['sa_since_time'];
@@ -69,8 +77,8 @@ class TwitterFeed extends Base implements iSocialFeed {
 
 			$p = array();
 			$p['id'] = $post->id;
-			$p['message'] = $post->text;
-			$p['link'] = 'https://www.twitter.com/' . $post->user->screen_name;
+			$p['message'] = $this->filterContent($post->text);
+			$p['link'] = 'https://www.twitter.com/' . $post->user->screen_name . '/status/' . $post->id;
 			$p['date_added'] = $date_added;
 			$p['date_created'] = strtotime($post->created_at);
 
