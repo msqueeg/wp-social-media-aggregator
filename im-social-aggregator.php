@@ -58,6 +58,7 @@ class IM_Aggregator {
 
 		add_filter('cron_schedules', array($this, 'cron_add_minute'));
 		add_action('run_cron', array($this, 'start_aggregation'));
+		add_action('fb_cron', array($this, 'fb_aggregation'));
 
 		// helpers
 		add_filter('sa/helpers/get_plugin_url', array($this, 'get_plugin_url'), 1, 1);
@@ -625,7 +626,10 @@ class IM_Aggregator {
 	public function activate () {
 		$this->log('** IM_Aggregator activated..');
 		if (!wp_next_scheduled('run_cron')) {
-			wp_schedule_event(time(), 'daily', 'run_cron'); // TODO: change this to 'daily' for production..
+			wp_schedule_event(time(), 'twicedaily', 'run_cron'); // TODO: change this to 'daily' for production..
+		}
+		if (!wp_next_scheduled('fb_cron')) {
+			wp_schedule_event(time(), 'twicedaily', 'fb_cron');
 		}
 	}
 
@@ -633,18 +637,16 @@ class IM_Aggregator {
 	public function deactivate () {
 		$this->log('** IM_Aggregator deactivated..');
 		wp_clear_scheduled_hook('run_cron');
+		wp_clear_scheduled_hook('fb_cron');
 	}
 
-	public function start_aggregation () {
-		$this->log('<<<<<<<<<<<<<<<<<<<<<<<<<< start aggregation..');
+	public function fb_aggregation () {
+		$this->log('<<<<<<<<<<<<<<<<<<<<<<<<<< start facebook..');
 
-		// increasing maximum execution time to 3 min for this part, it can take more time
-		// than the default 30 secs for the images to be downloaded and processed by PHP/WP..
-		// set_time_limit(180);
+		set_time_limit(180);
 
 		$feed_enabled = false;
 
-		// fetch from Facebook..
 		$options = get_option('facebook_page');
 		if (isset($options[$this->prefix . 'enabled'])) {
 			$feed_enabled = true;
@@ -657,6 +659,35 @@ class IM_Aggregator {
 				$this->save_feed_items($result, $this->sections[$this->prefix . 'facebook']);
 			}
 		}
+
+		$this->log('>>>>>>>>>>>>>>>>>>>>>>>>>> aggregation complete..!');
+		if (!$feed_enabled) return 'Facebook is not enabled. <a href="edit.php?post_type=' . $this->post_type . '&page=' . $this->settings_slug . '">Enable some feeds.</a>';
+
+	}
+
+	public function start_aggregation () {
+		$this->log('<<<<<<<<<<<<<<<<<<<<<<<<<< start aggregation..');
+
+		// increasing maximum execution time to 3 min for this part, it can take more time
+		// than the default 30 secs for the images to be downloaded and processed by PHP/WP..
+		 set_time_limit(180);
+
+		$feed_enabled = false;
+
+		// fetch from Facebook..
+		//breaking out as a separate cron job
+		/*$options = get_option('facebook_page');
+		if (isset($options[$this->prefix . 'enabled'])) {
+			$feed_enabled = true;
+			$fb = new FacebookFeed ();
+			$result = $fb->getFeed ($options);
+			if ($this->feed_error($result)) {
+				return $result['message'];
+			}
+			else {
+				$this->save_feed_items($result, $this->sections[$this->prefix . 'facebook']);
+			}
+		}*/
 
 		// fetch from Twitter..
 		$options = get_option('twitter_page');

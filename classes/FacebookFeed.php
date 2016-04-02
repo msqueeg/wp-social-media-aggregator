@@ -30,7 +30,8 @@ class FacebookFeed extends Base implements iSocialFeed {
 		try {
 			// $user_profile = $facebook->api('/me');
 			// $this->log($user_profile);
-			$response = $facebook->api($options['sa_fb_page_id'] . '/feed/?fields=id,type,caption,picture,message,link,object_id&limit=25&since=' . $since_time);
+			//to-do: add options for different types of facebook feeds 'feed', 'posts', 'likes'
+			$response = $facebook->api($options['sa_fb_page_id'] . '/posts/?fields=id,type,caption,picture,message,link,object_id&limit=25&since=' . $since_time);
 		} catch (FacebookApiException $e) {
 			// $loginUrl = $facebook->getLoginUrl(array('scope' => 'publish_stream', 'redirect_uri' => 'http://freefly.ryan.invokedev.com/'));
 			$result = $e->getResult();
@@ -53,16 +54,24 @@ class FacebookFeed extends Base implements iSocialFeed {
 		foreach ($response['data'] as $post) {
 			if ($post['type'] == 'photo') {
 
-				// get images..
-				$images = $facebook->api($post['object_id'] . '?fields=images');
-
+				$images = array();
 				$p = array();
 
-				foreach ($images['images'] as $item) {
-					if ($item['height'] >= 480) {
-						$p['picture'] = $item['source'];
-						break;
+				// get images..
+				try {
+						$images = $facebook->api($post['object_id'] . '?fields=images');
+
+						foreach ($images['images'] as $item) {
+						if ($item['height'] >= 480) {
+							$p['picture'] = $item['source'];
+							break;
+						}
+
+					} catch( FacebookApiException $e ) {
+						$result = $e->getResult();
+						return array('error' => 4, 'message' => 'Error fetching Facebook images: <span class="social-feed-error">' . $result['error']['message'] . '</span>');
 					}
+
 				}
 
 				$p['id'] = $post['id'];
