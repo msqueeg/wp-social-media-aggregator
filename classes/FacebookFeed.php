@@ -67,11 +67,11 @@ class FacebookFeed extends Base implements iSocialFeed {
 							break;
 						}
 
-					} catch( FacebookApiException $e ) {
+					} 
+
+				} catch( FacebookApiException $e ) {
 						$result = $e->getResult();
 						return array('error' => 4, 'message' => 'Error fetching Facebook images: <span class="social-feed-error">' . $result['error']['message'] . '</span>');
-					}
-
 				}
 
 				$p['id'] = $post['id'];

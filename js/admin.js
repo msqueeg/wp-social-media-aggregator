@@ -10,6 +10,8 @@
           display: 'inline-block'
         });
         switch (id) {
+          case 'sa-btn-fetch-fb':
+            return fetchFBData();
           case 'sa-btn-fetch':
             return fetchData();
           case 'sa-btn-reset':
@@ -17,6 +19,24 @@
         }
       });
     };
+
+    fetchFBData = function(id) {
+      return $.ajax({
+        type: 'GET',
+        url: ajaxurl,
+        data: {
+          action: 'fetch_facebook_feed'
+        }
+      }).done(function(response) {
+        if (response.message != null) {
+          $('#sa-btn-fetch-fb').parent().find('.message').html(response.message);
+        }
+        return $('#sa-btn-fetch-fb').parent().find('.spinner').css({
+          display: 'none'
+        });
+      });
+    };
+
     fetchData = function(id) {
       return $.ajax({
         type: 'GET',

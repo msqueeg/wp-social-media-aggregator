@@ -594,8 +594,15 @@ class IM_Aggregator {
 			<h2>Social Aggregator Options</h2>
 			<div id="sa-options">
 				<div class="sa-section">
-					<h3>Manually Fetch Social Feeds</h3>
-					<p>To manually fetch all enabled social feeds without having to wait for the daily (wp) cron job to run, click the button below.</p>
+					<h3>Manually Fetch Facebook Posts</h3>
+					<p>To manually fetch Facebook Posts without having to wait for the twice daily (wp) cron job to run, click the button below.</p>
+					<button id="sa-btn-facefetch" class="button button-primary button-large">Manually Fetch Facebook</button>
+					<span class="spinner"></span>
+					<div class="message"></div>
+				</div>
+				<div class="sa-section">
+					<h3>Manually Fetch Other Social Feeds</h3>
+					<p>To manually fetch all enabled social feeds without having to wait for the twice daily (wp) cron job to run, click the button below.</p>
 					<button id="sa-btn-fetch" class="button button-primary button-large">Manually Fetch Social Feeds</button>
 					<span class="spinner"></span>
 					<div class="message"></div>
@@ -975,6 +982,19 @@ class IM_Aggregator {
 			$options[$this->prefix . 'since_time'] = 1;
 			update_option($page, $options);
 		}
+		exit;
+	}
+
+	public function fetch_facebook_feed () {
+		$this->log ('fetch facebook..');
+		$result = $this->fb_aggregation();
+
+		$response = json_encode(array('message' => $result));
+
+		// // response output..
+		header("Content-Type: application/json");
+		echo $response;
+
 		exit;
 	}
 
