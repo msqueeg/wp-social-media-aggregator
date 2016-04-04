@@ -23,6 +23,7 @@ class FacebookFeed extends Base implements iSocialFeed {
 		  'secret' => $options['sa_fb_app_secret']
 		));
 
+
 		if (empty($options['sa_fb_page_id'])) return array('error' => 2, 'message' => 'Facebook Page ID not set.');
 
 		$since_time = empty($options['sa_since_time']) ? 1 : $options['sa_since_time'];
@@ -31,7 +32,7 @@ class FacebookFeed extends Base implements iSocialFeed {
 			// $user_profile = $facebook->api('/me');
 			// $this->log($user_profile);
 			//to-do: add options for different types of facebook feeds 'feed', 'posts', 'likes'
-			$response = $facebook->api($options['sa_fb_page_id'] . '/posts/?fields=id,type,caption,picture,message,link,object_id&limit=25&since=' . $since_time);
+			$response = $facebook->api($options['sa_fb_page_id'] . '/posts/?fields=id,type,caption,picture,message,link,object_id,created_time&limit=25&since=' . $since_time);
 		} catch (FacebookApiException $e) {
 			// $loginUrl = $facebook->getLoginUrl(array('scope' => 'publish_stream', 'redirect_uri' => 'http://freefly.ryan.invokedev.com/'));
 			$result = $e->getResult();

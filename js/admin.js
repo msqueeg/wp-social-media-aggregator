@@ -7,7 +7,7 @@
         e.preventDefault;
         id = $(e.target).attr('id');
         $('#' + id).parent().find('.spinner').css({
-          display: 'inline-block'
+          visibility: 'visible'
         });
         switch (id) {
           case 'sa-btn-fetch-fb':
@@ -32,7 +32,7 @@
           $('#sa-btn-fetch-fb').parent().find('.message').html(response.message);
         }
         return $('#sa-btn-fetch-fb').parent().find('.spinner').css({
-          display: 'none'
+          visibility: 'hidden'
         });
       });
     };
@@ -49,7 +49,7 @@
           $('#sa-btn-fetch').parent().find('.message').html(response.message);
         }
         return $('#sa-btn-fetch').parent().find('.spinner').css({
-          display: 'none'
+          visibility: 'hidden'
         });
       });
     };
@@ -62,7 +62,7 @@
         }
       }).done(function(response) {
         return $('#sa-btn-reset').parent().find('.spinner').css({
-          display: 'none'
+          visibility: 'hidden'
         });
       });
     };
