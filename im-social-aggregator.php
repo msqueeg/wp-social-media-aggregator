@@ -667,7 +667,7 @@ class IM_Aggregator {
 			}
 		}
 
-		$this->log('>>>>>>>>>>>>>>>>>>>>>>>>>> aggregation complete..!');
+		$this->log('>>>>>>>>>>>>>>>>>>>>>>>>>> facebook complete..!');
 		if (!$feed_enabled) return 'Facebook is not enabled. <a href="edit.php?post_type=' . $this->post_type . '&page=' . $this->settings_slug . '">Enable some feeds.</a>';
 
 	}
